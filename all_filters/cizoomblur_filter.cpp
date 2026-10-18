@@ -41,11 +41,11 @@ Color Sample(const Image& image, float x, float y) {
                c00.b * w00 + c10.b * w10 + c01.b * w01 + c11.b * w11);
 }
 
-std::vector<float> MakeWeights(size_t half) {
-    std::vector<float> weights(2 * half + 1);
+std::vector<float> MakeWeights(size_t radius) {
+    std::vector<float> weights(2 * radius + 1);
     float sum = 0.0;
     for (size_t i = 0; i < weights.size(); ++i) {
-        float g = kWindowSigmas * (static_cast<float>(i) - static_cast<float>(half)) / static_cast<float>(half);
+        float g = kWindowSigmas * (static_cast<float>(i) - static_cast<float>(radius)) / static_cast<float>(radius);
         weights[i] = std::expf(-g * g / 2.0f);
         sum += weights[i];
     }
