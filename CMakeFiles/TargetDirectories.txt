@@ -1,0 +1,3 @@
+/Users/maratismagilov/projects/my_image_processor/CMakeFiles/image_processor.dir
+/Users/maratismagilov/projects/my_image_processor/CMakeFiles/edit_cache.dir
+/Users/maratismagilov/projects/my_image_processor/CMakeFiles/rebuild_cache.dir
