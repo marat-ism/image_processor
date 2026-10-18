@@ -106,8 +106,7 @@ void CIZoomBlurFilter::Apply(Image& image) const {
 
             Color sum;
             for (size_t i = 0; i < weights.size(); ++i) {
-                float g =
-                    kWindowSigmas * (static_cast<float>(i) - static_cast<float>(half)) / static_cast<float>(half);
+                float g = kWindowSigmas * (static_cast<float>(i) - static_cast<float>(half)) / static_cast<float>(half);
                 float z = 1.0 - mean - sigma * g;
                 Color s = Sample(image, center_x + dx * z, center_y + dy * z);
                 sum.r += weights[i] * s.r;
