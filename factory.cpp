@@ -43,6 +43,18 @@ float ParseFiniteFloat(std::string_view text) {
     return answer;
 }
 
+double ParseFiniteDouble(std::string_view text) {
+    if (text.empty()) {
+        throw InvalidParameterError();
+    }
+    double answer = 0.0;
+    auto [result, ec] = std::from_chars(text.data(), text.data() + text.size(), answer);
+    if (ec != std::errc() || result != text.data() + text.size() || !std::isfinite(answer)) {
+        throw InvalidParameterError();
+    }
+    return answer;
+}
+
 template <typename T>
 std::unique_ptr<Filter> Make(const Params& params) {
     if constexpr (std::is_same_v<T, CropFilter>) {
@@ -65,9 +77,12 @@ std::unique_ptr<Filter> Make(const Params& params) {
         if (params.size() != 1u) {
             throw InvalidParameterError();
         }
-        float sigma = ParseFiniteFloat(params[0]);
+        double sigma = ParseFiniteDouble(params[0]);
         if (sigma <= 0.0f) {
             throw InvalidParameterError();
+        }
+        if (sigma <= sqrt(std::numeric_limits<double>::min()) / 2) {
+            return std::make_unique<GaussianFilter>(sqrt(std::numeric_limits<double>::min()) / 2);
         }
         return std::make_unique<GaussianFilter>(sigma);
     } else if constexpr (std::is_same_v<T, CIZoomBlurFilter>) {
@@ -78,7 +93,7 @@ std::unique_ptr<Filter> Make(const Params& params) {
             throw InvalidParameterError();
         }
 
-        float amount = ParseFiniteFloat(params[0]);
+        double amount = ParseFiniteDouble(params[0]);
         if (amount < 0.0f) {
             throw InvalidParameterError();
         }
@@ -86,8 +101,8 @@ std::unique_ptr<Filter> Make(const Params& params) {
             return std::make_unique<CIZoomBlurFilter>(amount);
         }
 
-        float center_x = ParseFiniteFloat(params[1]);
-        float center_y = ParseFiniteFloat(params[2]);
+        double center_x = ParseFiniteDouble(params[1]);
+        double center_y = ParseFiniteDouble(params[2]);
         return std::make_unique<CIZoomBlurFilter>(amount, center_x, center_y);
     } else {
         if (!params.empty()) {

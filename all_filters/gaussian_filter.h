@@ -6,7 +6,7 @@ namespace ip {
     
 class GaussianFilter : public Filter {
 public:
-    GaussianFilter(float sigma);
+    GaussianFilter(double sigma);
     
     void Apply(Image& image) const override;
 
@@ -14,12 +14,12 @@ public:
         return "blur";
     }
 
-    float Sigma() const {
+    double Sigma() const {
         return sigma_;
     }
 
 private:
-    float sigma_ = 0.0f;
+    double sigma_ = 0.0f;
 };
 
 }
