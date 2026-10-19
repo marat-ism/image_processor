@@ -36,9 +36,9 @@ Color Sample(const Image& image, double x, double y) {
     double w01 = (1.0 - fx) * fy;
     double w11 = fx * fy;
 
-    return Color(c00.r * w00 + c10.r * w10 + c01.r * w01 + c11.r * w11,
-               c00.g * w00 + c10.g * w10 + c01.g * w01 + c11.g * w11,
-               c00.b * w00 + c10.b * w10 + c01.b * w01 + c11.b * w11);
+    return Color(static_cast<float>(c00.r * w00 + c10.r * w10 + c01.r * w01 + c11.r * w11),
+               static_cast<float>(c00.g * w00 + c10.g * w10 + c01.g * w01 + c11.g * w11),
+               static_cast<float>(c00.b * w00 + c10.b * w10 + c01.b * w01 + c11.b * w11));
 }
 
 std::vector<double> MakeWeights(size_t radius) {
@@ -95,16 +95,18 @@ void CIZoomBlurFilter::Apply(Image& image) const {
                 weights = MakeWeights(half);
             }
 
-            Color sum;
+            double sum_r = 0;
+            double sum_g = 0;
+            double sum_b = 0;
             for (size_t i = 0; i < weights.size(); ++i) {
                 double g = kWindowSigmas * (static_cast<double>(i) - static_cast<double>(half)) / static_cast<double>(half);
                 double z = 1.0 - mean - sigma * g;
                 Color s = Sample(image, center_x + dx * z, center_y + dy * z);
-                sum.r += weights[i] * s.r;
-                sum.g += weights[i] * s.g;
-                sum.b += weights[i] * s.b;
+                sum_r += weights[i] * s.r;
+                sum_g += weights[i] * s.g;
+                sum_b += weights[i] * s.b;
             }
-            result.At(x, y) = Color(sum.r, sum.g, sum.b);
+            result.At(x, y) = Color(static_cast<float>(sum_r), static_cast<float>(sum_g), static_cast<float>(sum_b));
         }
     }
 
