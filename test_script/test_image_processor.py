@@ -58,6 +58,7 @@ class ImageProcessorTester:
                 ImageProcessorTester.TestCase(input="flag", name="sharp", args=["-sharp"], eps=1.0)
             ],
             "blur": [
+                ImageProcessorTester.TestCase(input="flag", name="blur", args=["-blur", "10"], eps=1.0)
             ],
         }
         failed_filters = []
